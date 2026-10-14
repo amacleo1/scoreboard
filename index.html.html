@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+      maximum-scale=1.0, user-scalable=no">
+
+<title>Volleyball Scorekeeper</title>
+
+<!-- iPhone App Mode -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Volleyball Scorekeeper">
+<meta name="theme-color" content="#111827">
+
+<!-- App Icon -->
+volleyball-icon.png
+volleyball-icon.png
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body{
+    height:100%;
+}
+
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:#111827;
+    color:white;
+    padding:10px;
+    overflow:hidden;
+}
+
+#setupArea{
+    margin-bottom:12px;
+}
+
+.setup{
+    display:grid;
+    grid-template-columns:1fr 70px;
+    gap:8px;
+    margin-bottom:10px;
+}
+
+input[type="text"]{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    font-size:18px;
+}
+
+input[type="color"]{
+    width:100%;
+    height:50px;
+    border:none;
+    border-radius:12px;
+}
+
+.start-btn,
+.settings-btn,
+.reset{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    font-size:20px;
+    font-weight:600;
+    color:white;
+}
+
+.start-btn{
+    background:#16a34a;
+}
+
+.settings-btn{
+    background:#2563eb;
+    margin-bottom:8px;
+    display:none;
+}
+
+.reset{
+    background:#dc2626;
+    margin-top:10px;
+}
+
+.scoreboard{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.team{
+    border-radius:20px;
+    padding:12px;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-height:70vh;
+}
+
+.team-name{
+    font-size:30px;
+    font-weight:700;
+    word-break:break-word;
+}
+
+.score{
+    font-size:min(35vw,280px);
+    line-height:1;
+    font-weight:900;
+    user-select:none;
+    cursor:pointer;
+}
+
+.minus-btn{
+    border:none;
+    border-radius:16px;
+    padding:18px;
+    font-size:34px;
+    font-weight:bold;
+    background:rgba(255,255,255,0.25);
+    color:white;
+}
+
+@media (orientation: landscape){
+
+    .team{
+        min-height:55vh;
+    }
+
+    .score{
+        font-size:min(30vw,320px);
+    }
+
+    .team-name{
+        font-size:34px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="setupArea">
+
+    <div class="setup">
+        <input id="nameA" type="text" value="Team A">
+        <input id="colorA" type="color" value="#2563eb">
+    </div>
+
+    <div class="setup">
+        <input id="nameB" type="text" value="Team B">
+        <input id="colorB" type="color" value="#ea580c">
+    </div>
+
+    <button class="start-btn" onclick="startMatch()">
+        Start Match
+    </button>
+
+</div>
+
+<button id="settingsBtn" class="settings-btn" onclick="showSettings()">
+    Settings
+</button>
+
+<div class="scoreboard">
+
+    <div class="team" id="teamA">
+
+        <div class="team-name" id="labelA">
+            Team A
+        </div>
+
+        <div id="scoreA" class="score">
+            0
+        </div>
+
+        <button class="minus-btn" onclick="minusScore('A')">
+            −1
+        </button>
+
+    </div>
+
+    <div class="team" id="teamB">
+
+        <div class="team-name" id="labelB">
+            Team B
+        </div>
+
+        <div id="scoreB" class="score">
+            0
+        </div>
+
+        <button class="minus-btn" onclick="minusScore('B')">
+            −1
+        </button>
+
+    </div>
+
+</div>
+
+<button class="reset" onclick="resetScores()">
+    Reset Scores
+</button>
+
+<script>
+
+let scoreA = 0;
+let scoreB = 0;
+
+function updateDisplay(){
+
+    document.getElementById("scoreA").textContent = scoreA;
+    document.getElementById("scoreB").textContent = scoreB;
+
+    document.getElementById("labelA").textContent =
+        document.getElementById("nameA").value || "Team A";
+
+    document.getElementById("labelB").textContent =
+        document.getElementById("nameB").value || "Team B";
+
+    document.getElementById("teamA").style.backgroundColor =
+        document.getElementById("colorA").value;
+
+    document.getElementById("teamB").style.backgroundColor =
+        document.getElementById("colorB").value;
+}
+
+function startMatch(){
+    document.getElementById("setupArea").style.display = "none";
+    document.getElementById("settingsBtn").style.display = "block";
+}
+
+function showSettings(){
+
+    const setup = document.getElementById("setupArea");
+
+    if(setup.style.display === "none"){
+        setup.style.display = "block";
+    } else {
+        setup.style.display = "none";
+    }
+}
+
+document.getElementById("scoreA").addEventListener("click", function(){
+    scoreA++;
+    updateDisplay();
+});
+
+document.getElementById("scoreB").addEventListener("click", function(){
+    scoreB++;
+    updateDisplay();
+});
+
+function minusScore(team){
+
+    if(team === "A" && scoreA > 0){
+        scoreA--;
+    }
+
+    if(team === "B" && scoreB > 0){
+        scoreB--;
+    }
+
+    updateDisplay();
+}
+
+function resetScores(){
+
+    if(confirm("Reset both scores to zero?")){
+
+        scoreA = 0;
+        scoreB = 0;
+
+        updateDisplay();
+    }
+}
+
+updateDisplay();
+
+</script>
+
+</body>
+</html>
