@@ -1,249 +1,38 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Volleyball Scorekeeper</title>
-
-<style>
-
-body{
-    margin:0;
-    font-family:-apple-system,sans-serif;
-    background:#111827;
-    color:white;
-}
-
-#setup{
-    padding:10px;
-}
-
-.row{
-    display:flex;
-    gap:10px;
-    margin-bottom:10px;
-}
-
-input[type=text]{
-    flex:1;
-    padding:12px;
-    font-size:18px;
-    border:none;
-    border-radius:10px;
-}
-
-input[type=color]{
-    width:60px;
-    border:none;
-}
-
-button{
-    border:none;
-    border-radius:10px;
-}
-
-#startBtn{
-    width:100%;
-    padding:12px;
-    font-size:18px;
-    background:#16a34a;
-    color:white;
-}
-
-#resetBtn{
+.settings-btn{
     position:fixed;
-    top:10px;
+    bottom:10px;
+    right:10px;
+
+    width:36px;
+    height:36px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#2563eb;
+    color:white;
+
+    font-size:16px;
+
+    z-index:1000;
+    display:none;
+}
+
+.reset-btn{
+    position:fixed;
+    bottom:10px;
     left:10px;
-    width:40px;
-    height:40px;
+
+    width:36px;
+    height:36px;
+
+    border:none;
+    border-radius:50%;
+
     background:#dc2626;
     color:white;
-    display:none;
+
+    font-size:16px;
+
     z-index:1000;
 }
-
-#board{
-    display:none;
-    height:100vh;
-}
-
-.team{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    align-items:center;
-    padding:10px;
-}
-
-.name{
-    font-size:24px;
-    font-weight:bold;
-    height:40px;
-    width:100%;
-    text-align:center;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-.score{
-    font-size:35vw;
-    font-weight:900;
-    line-height:1;
-}
-
-.minus{
-    width:80%;
-    padding:12px;
-    font-size:28px;
-    background:rgba(255,255,255,.25);
-    color:white;
-}
-
-@media (orientation: landscape){
-
-    .score{
-        font-size:28vw;
-    }
-
-    .name{
-        font-size:20px;
-    }
-}
-
-</style>
-</head>
-
-<body>
-
-<div id="setup">
-
-    <div class="row">
-        <input id="teamAName" type="text" value="Team A">
-        <input id="teamAColor" type="color" value="#e74c3c">
-    </div>
-
-    <div class="row">
-        <input id="teamBName" type="text" value="Team B">
-        <input id="teamBColor" type="color" value="#3498db">
-    </div>
-
-    <button id="startBtn">Start Match</button>
-
-</div>
-
-<button id="resetBtn">↺</button>
-
-<div id="board">
-
-    <div class="team" id="teamA">
-
-        <div class="name" id="nameA">Team A</div>
-
-        <div class="score" id="scoreA">0</div>
-
-        <button class="minus" id="minusA">-1</button>
-
-    </div>
-
-    <div class="team" id="teamB">
-
-        <div class="name" id="nameB">Team B</div>
-
-        <div class="score" id="scoreB">0</div>
-
-        <button class="minus" id="minusB">-1</button>
-
-    </div>
-
-</div>
-
-<script>
-
-let scoreA = 0;
-let scoreB = 0;
-
-function updateDisplay(){
-
-    document.getElementById("scoreA").textContent = scoreA;
-    document.getElementById("scoreB").textContent = scoreB;
-
-    document.getElementById("nameA").textContent =
-        document.getElementById("teamAName").value;
-
-    document.getElementById("nameB").textContent =
-        document.getElementById("teamBName").value;
-
-    document.getElementById("teamA").style.backgroundColor =
-        document.getElementById("teamAColor").value;
-
-    document.getElementById("teamB").style.backgroundColor =
-        document.getElementById("teamBColor").value;
-}
-
-document.getElementById("startBtn").onclick = function(){
-
-    updateDisplay();
-
-    document.getElementById("setup").style.display = "none";
-
-    document.getElementById("board").style.display = "flex";
-
-    document.getElementById("resetBtn").style.display = "block";
-};
-
-document.getElementById("teamA").onclick = function(e){
-
-    if(e.target.id === "minusA") return;
-
-    scoreA++;
-    updateDisplay();
-};
-
-document.getElementById("teamB").onclick = function(e){
-
-    if(e.target.id === "minusB") return;
-
-    scoreB++;
-    updateDisplay();
-};
-
-document.getElementById("minusA").onclick = function(e){
-
-    e.stopPropagation();
-
-    if(scoreA > 0){
-        scoreA--;
-    }
-
-    updateDisplay();
-};
-
-document.getElementById("minusB").onclick = function(e){
-
-    e.stopPropagation();
-
-    if(scoreB > 0){
-        scoreB--;
-    }
-
-    updateDisplay();
-};
-
-document.getElementById("resetBtn").onclick = function(){
-
-    if(confirm("Reset scores?")){
-
-        scoreA = 0;
-        scoreB = 0;
-
-        updateDisplay();
-    }
-};
-
-</script>
-
-</body>
-</html>
