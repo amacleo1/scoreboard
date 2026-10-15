@@ -2,11 +2,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Volleyball Scorekeeper</title>
 
 <style>
+
 body{
     margin:0;
     font-family:-apple-system,sans-serif;
@@ -26,10 +27,10 @@ body{
 
 input[type=text]{
     flex:1;
-    padding:10px;
+    padding:12px;
     font-size:18px;
-    border-radius:10px;
     border:none;
+    border-radius:10px;
 }
 
 input[type=color]{
@@ -50,57 +51,45 @@ button{
     color:white;
 }
 
-#settingsBtn{
-    position:fixed;
-    top:10px;
-    right:10px;
-    width:40px;
-    height:40px;
-    display:none;
-    font-size:20px;
-    background:#2563eb;
-    color:white;
-}
-
 #resetBtn{
     position:fixed;
     top:10px;
     left:10px;
     width:40px;
     height:40px;
-    display:none;
-    font-size:20px;
     background:#dc2626;
     color:white;
+    display:none;
+    z-index:1000;
 }
 
 #board{
     display:none;
     height:100vh;
-    gap:6px;
 }
 
 .team{
     flex:1;
     display:flex;
     flex-direction:column;
-    align-items:center;
     justify-content:space-between;
+    align-items:center;
     padding:10px;
 }
 
 .name{
     font-size:24px;
     font-weight:bold;
+    height:40px;
+    width:100%;
+    text-align:center;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
-    width:100%;
-    text-align:center;
 }
 
 .score{
-    font-size:40vw;
+    font-size:35vw;
     font-weight:900;
     line-height:1;
 }
@@ -109,15 +98,21 @@ button{
     width:80%;
     padding:12px;
     font-size:28px;
-    background:rgba(255,255,255,0.25);
+    background:rgba(255,255,255,.25);
     color:white;
 }
 
-@media (orientation:landscape){
+@media (orientation: landscape){
+
     .score{
-        font-size:30vw;
+        font-size:28vw;
+    }
+
+    .name{
+        font-size:20px;
     }
 }
+
 </style>
 </head>
 
@@ -127,19 +122,18 @@ button{
 
     <div class="row">
         <input id="teamAName" type="text" value="Team A">
-        <input id="teamAColor" type="color" value="#ff4d30">
+        <input id="teamAColor" type="color" value="#e74c3c">
     </div>
 
     <div class="row">
         <input id="teamBName" type="text" value="Team B">
-        <input id="teamBColor" type="color" value="#4285f4">
+        <input id="teamBColor" type="color" value="#3498db">
     </div>
 
     <button id="startBtn">Start Match</button>
 
 </div>
 
-<button id="settingsBtn">⚙️</button>
 <button id="resetBtn">↺</button>
 
 <div id="board">
@@ -171,97 +165,85 @@ button{
 let scoreA = 0;
 let scoreB = 0;
 
-function draw(){
+function updateDisplay(){
 
-    document.getElementById("scoreA").innerText = scoreA;
-    document.getElementById("scoreB").innerText = scoreB;
+    document.getElementById("scoreA").textContent = scoreA;
+    document.getElementById("scoreB").textContent = scoreB;
 
-    document.getElementById("nameA").innerText =
+    document.getElementById("nameA").textContent =
         document.getElementById("teamAName").value;
 
-    document.getElementById("nameB").innerText =
+    document.getElementById("nameB").textContent =
         document.getElementById("teamBName").value;
 
-    document.getElementById("teamA").style.background =
+    document.getElementById("teamA").style.backgroundColor =
         document.getElementById("teamAColor").value;
 
-    document.getElementById("teamB").style.background =
+    document.getElementById("teamB").style.backgroundColor =
         document.getElementById("teamBColor").value;
 }
 
 document.getElementById("startBtn").onclick = function(){
 
-    draw();
+    updateDisplay();
 
-    document.getElementById("setup").style.display="none";
+    document.getElementById("setup").style.display = "none";
 
-    document.getElementById("board").style.display="flex";
+    document.getElementById("board").style.display = "flex";
 
-    document.getElementById("settingsBtn").style.display="block";
-
-    document.getElementById("resetBtn").style.display="block";
-};
-
-document.getElementById("settingsBtn").onclick = function(){
-
-    let setup = document.getElementById("setup");
-
-    if(setup.style.display==="none"){
-        setup.style.display="block";
-    } else {
-        setup.style.display="none";
-    }
+    document.getElementById("resetBtn").style.display = "block";
 };
 
 document.getElementById("teamA").onclick = function(e){
 
-    if(e.target.id==="minusA") return;
+    if(e.target.id === "minusA") return;
 
     scoreA++;
-    draw();
+    updateDisplay();
 };
 
 document.getElementById("teamB").onclick = function(e){
 
-    if(e.target.id==="minusB") return;
+    if(e.target.id === "minusB") return;
 
     scoreB++;
-    draw();
+    updateDisplay();
 };
 
 document.getElementById("minusA").onclick = function(e){
 
     e.stopPropagation();
 
-    if(scoreA>0) scoreA--;
+    if(scoreA > 0){
+        scoreA--;
+    }
 
-    draw();
+    updateDisplay();
 };
 
 document.getElementById("minusB").onclick = function(e){
 
     e.stopPropagation();
 
-    if(scoreB>0) scoreB--;
+    if(scoreB > 0){
+        scoreB--;
+    }
 
-    draw();
+    updateDisplay();
 };
 
 document.getElementById("resetBtn").onclick = function(){
 
     if(confirm("Reset scores?")){
 
-        scoreA=0;
-        scoreB=0;
+        scoreA = 0;
+        scoreB = 0;
 
-        draw();
+        updateDisplay();
     }
 };
-
-draw();
 
 </script>
 
 </body>
 </html>
-
