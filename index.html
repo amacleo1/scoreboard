@@ -2,11 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<meta name="viewport"
+      content="width=device-width,
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Scorekeeper">
 
 <title>Volleyball Scorekeeper</title>
 
 <style>
+
 body{
     margin:0;
     font-family:-apple-system, Arial, sans-serif;
@@ -53,19 +63,25 @@ button{
 #resetBtn{
     position:fixed;
     bottom:10px;
-    left:10px;
-    width:40px;
+    left:50%;
+    transform:translateX(-50%);
+
+    width:140px;
     height:40px;
-    font-size:18px;
+
     background:#dc2626;
     color:white;
+
+    font-size:16px;
+    font-weight:bold;
+
     display:none;
     z-index:1000;
 }
 
 #board{
     display:none;
-    height:100vh;
+    height:calc(100vh - 60px);
 }
 
 .team{
@@ -80,36 +96,55 @@ button{
 .name{
     width:100%;
     text-align:center;
+
     font-size:24px;
     font-weight:bold;
+
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
 }
 
 .score{
-    font-size:min(35vw,220px);
+    font-size:min(42vw,280px);
     font-weight:900;
     line-height:1;
 }
 
 .minus{
-    width:120px;
-    padding:10px;
-    font-size:24px;
-    background:rgba(255,255,255,0.25);
+    width:60px;
+    height:40px;
+
+    padding:0;
+
+    font-size:18px;
+    font-weight:bold;
+
+    background:rgba(255,255,255,0.20);
     color:white;
 }
 
 @media (orientation:landscape){
-    .score{
-        font-size:min(30vw,260px);
+
+    #board{
+        height:calc(100vh - 55px);
     }
 
     .name{
         font-size:20px;
     }
+
+    .score{
+        font-size:min(45vh,420px);
+    }
+
+    .minus{
+        width:50px;
+        height:32px;
+        font-size:16px;
+    }
 }
+
 </style>
 </head>
 
@@ -131,7 +166,7 @@ button{
 
 </div>
 
-<button id="resetBtn">↺</button>
+<button id="resetBtn">Reset</button>
 
 <div id="board">
 
@@ -163,6 +198,7 @@ let scoreA = 0;
 let scoreB = 0;
 
 function updateDisplay() {
+
     document.getElementById("scoreA").textContent = scoreA;
     document.getElementById("scoreB").textContent = scoreB;
 }
@@ -182,46 +218,63 @@ document.getElementById("startBtn").onclick = function() {
         document.getElementById("teamBColor").value;
 
     document.getElementById("setup").style.display = "none";
+
     document.getElementById("board").style.display = "flex";
+
     document.getElementById("resetBtn").style.display = "block";
 
     updateDisplay();
 };
 
 document.getElementById("teamA").onclick = function(e) {
+
     if (e.target.id !== "minusA") {
+
         scoreA++;
         updateDisplay();
     }
 };
 
 document.getElementById("teamB").onclick = function(e) {
+
     if (e.target.id !== "minusB") {
+
         scoreB++;
         updateDisplay();
     }
 };
 
 document.getElementById("minusA").onclick = function(e) {
+
     e.stopPropagation();
+
     if (scoreA > 0) {
+
         scoreA--;
         updateDisplay();
     }
 };
 
 document.getElementById("minusB").onclick = function(e) {
+
     e.stopPropagation();
+
     if (scoreB > 0) {
+
         scoreB--;
         updateDisplay();
     }
 };
 
 document.getElementById("resetBtn").onclick = function() {
-    scoreA = 0;
-    scoreB = 0;
-    updateDisplay();
+
+    if (confirm("Reset scores?")) {
+
+        scoreA = 0;
+        scoreB = 0;
+
+        updateDisplay();
+    }
 };
 
 </script>
