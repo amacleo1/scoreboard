@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0,
-      maximum-scale=1.0,
+      content="width=device-width,
+      initial-scale=1,
+      maximum-scale=1,
       user-scalable=no">
 
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="Scorekeeper">
 
 <title>Volleyball Scorekeeper</title>
 
@@ -45,7 +45,6 @@ input[type=text]{
 
 input[type=color]{
     width:60px;
-    border:none;
 }
 
 button{
@@ -61,40 +60,9 @@ button{
     color:white;
 }
 
-#settingsBtn{
-    position:fixed;
-    bottom:10px;
-    left:10px;
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    background:#2563eb;
-    color:white;
-    font-size:18px;
-    z-index:9999;
-}
-
-#resetBtn{
-    position:fixed;
-    bottom:10px;
-    left:50%;
-    transform:translateX(-50%);
-
-    width:120px;
-    height:42px;
-
-    background:#dc2626;
-    color:white;
-
-    font-size:16px;
-    font-weight:bold;
-
-    z-index:9999;
-}
-
 #board{
     display:flex;
-    height:calc(100vh - 60px);
+    height:calc(100vh - 90px);
 }
 
 .team{
@@ -109,8 +77,7 @@ button{
 .name{
     width:100%;
     text-align:center;
-
-    font-size:24px;
+    font-size:22px;
     font-weight:bold;
 
     white-space:nowrap;
@@ -125,16 +92,51 @@ button{
 }
 
 .minus{
-    width:55px;
-    height:34px;
-
-    padding:0;
-
+    width:50px;
+    height:32px;
     font-size:16px;
     font-weight:bold;
-
-    background:rgba(255,255,255,0.20);
+    background:rgba(255,255,255,.2);
     color:white;
+}
+
+#controlBar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+
+    height:60px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:15px;
+
+    background:#111827;
+}
+
+#settingsBtn{
+    width:40px;
+    height:40px;
+
+    border-radius:50%;
+
+    background:#2563eb;
+    color:white;
+
+    font-size:18px;
+}
+
+#resetBtn{
+    width:120px;
+    height:40px;
+
+    background:#dc2626;
+    color:white;
+
+    font-size:15px;
+    font-weight:bold;
 }
 
 @media (orientation:landscape){
@@ -144,7 +146,7 @@ button{
     }
 
     .name{
-        font-size:20px;
+        font-size:18px;
     }
 }
 
@@ -168,10 +170,6 @@ button{
     <button id="applyBtn">Apply Changes</button>
 
 </div>
-
-<button id="settingsBtn">⚙️</button>
-
-<button id="resetBtn">Reset</button>
 
 <div id="board">
 
@@ -197,17 +195,25 @@ button{
 
 </div>
 
+<div id="controlBar">
+
+    <button id="settingsBtn">⚙️</button>
+
+    <button id="resetBtn">Reset</button>
+
+</div>
+
 <script>
 
 let scoreA = 0;
 let scoreB = 0;
 
-function updateDisplay() {
+function updateDisplay(){
     document.getElementById("scoreA").textContent = scoreA;
     document.getElementById("scoreB").textContent = scoreB;
 }
 
-function applySettings() {
+function applySettings(){
 
     document.getElementById("nameA").textContent =
         document.getElementById("teamAName").value || "Team A";
@@ -225,7 +231,9 @@ function applySettings() {
 applySettings();
 updateDisplay();
 
-document.getElementById("settingsBtn").onclick = function() {
+document.getElementById("settingsBtn").addEventListener("click", function(event){
+
+    event.stopPropagation();
 
     const setup = document.getElementById("setup");
 
@@ -234,61 +242,62 @@ document.getElementById("settingsBtn").onclick = function() {
     } else {
         setup.style.display = "block";
     }
-};
+});
 
-document.getElementById("applyBtn").onclick = function() {
+document.getElementById("applyBtn").addEventListener("click", function(){
 
     applySettings();
-
     document.getElementById("setup").style.display = "none";
-};
+});
 
-document.getElementById("teamA").onclick = function(e) {
+document.getElementById("teamA").addEventListener("click", function(event){
 
-    if(e.target.id !== "minusA") {
-        scoreA++;
-        updateDisplay();
-    }
-};
+    if(event.target.id === "minusA") return;
 
-document.getElementById("teamB").onclick = function(e) {
+    scoreA++;
+    updateDisplay();
+});
 
-    if(e.target.id !== "minusB") {
-        scoreB++;
-        updateDisplay();
-    }
-};
+document.getElementById("teamB").addEventListener("click", function(event){
 
-document.getElementById("minusA").onclick = function(e) {
+    if(event.target.id === "minusB") return;
 
-    e.stopPropagation();
+    scoreB++;
+    updateDisplay();
+});
 
-    if(scoreA > 0) {
+document.getElementById("minusA").addEventListener("click", function(event){
+
+    event.stopPropagation();
+
+    if(scoreA > 0){
         scoreA--;
         updateDisplay();
     }
-};
+});
 
-document.getElementById("minusB").onclick = function(e) {
+document.getElementById("minusB").addEventListener("click", function(event){
 
-    e.stopPropagation();
+    event.stopPropagation();
 
-    if(scoreB > 0) {
+    if(scoreB > 0){
         scoreB--;
         updateDisplay();
     }
-};
+});
 
-document.getElementById("resetBtn").onclick = function() {
+document.getElementById("resetBtn").addEventListener("click", function(event){
 
-    if(confirm("Reset scores?")) {
+    event.stopPropagation();
+
+    if(confirm("Reset scores?")){
 
         scoreA = 0;
         scoreB = 0;
 
         updateDisplay();
     }
-};
+});
 
 </script>
 
