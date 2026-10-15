@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width,
-      initial-scale=1.0,
+      content="width=device-width, initial-scale=1.0,
       maximum-scale=1.0,
       user-scalable=no">
 
@@ -26,6 +25,7 @@ body{
 
 #setup{
     padding:10px;
+    display:none;
 }
 
 .row{
@@ -52,12 +52,29 @@ button{
     border-radius:10px;
 }
 
-#startBtn{
+#startBtn,
+#applyBtn{
     width:100%;
     padding:12px;
     font-size:18px;
     background:#16a34a;
     color:white;
+}
+
+#settingsBtn{
+    position:fixed;
+    bottom:10px;
+    left:10px;
+
+    width:40px;
+    height:40px;
+
+    background:#2563eb;
+    color:white;
+
+    font-size:18px;
+
+    z-index:1000;
 }
 
 #resetBtn{
@@ -66,7 +83,7 @@ button{
     left:50%;
     transform:translateX(-50%);
 
-    width:140px;
+    width:120px;
     height:40px;
 
     background:#dc2626;
@@ -75,12 +92,11 @@ button{
     font-size:16px;
     font-weight:bold;
 
-    display:none;
     z-index:1000;
 }
 
 #board{
-    display:none;
+    display:flex;
     height:calc(100vh - 60px);
 }
 
@@ -112,12 +128,12 @@ button{
 }
 
 .minus{
-    width:60px;
-    height:40px;
+    width:50px;
+    height:32px;
 
     padding:0;
 
-    font-size:18px;
+    font-size:16px;
     font-weight:bold;
 
     background:rgba(255,255,255,0.20);
@@ -137,18 +153,15 @@ button{
     .score{
         font-size:min(45vh,420px);
     }
-
-    .minus{
-        width:50px;
-        height:32px;
-        font-size:16px;
-    }
 }
 
 </style>
 </head>
 
 <body>
+
+<button id="settingsBtn">⚙️</button>
+<button id="resetBtn">Reset</button>
 
 <div id="setup">
 
@@ -162,11 +175,9 @@ button{
         <input id="teamBColor" type="color" value="#3498db">
     </div>
 
-    <button id="startBtn">Start Match</button>
+    <button id="applyBtn">Apply Changes</button>
 
 </div>
-
-<button id="resetBtn">Reset</button>
 
 <div id="board">
 
@@ -197,78 +208,89 @@ button{
 let scoreA = 0;
 let scoreB = 0;
 
-function updateDisplay() {
-
-    document.getElementById("scoreA").textContent = scoreA;
-    document.getElementById("scoreB").textContent = scoreB;
-}
-
-document.getElementById("startBtn").onclick = function() {
+function applySettings(){
 
     document.getElementById("nameA").textContent =
-        document.getElementById("teamAName").value;
+        document.getElementById("teamAName").value || "Team A";
 
     document.getElementById("nameB").textContent =
-        document.getElementById("teamBName").value;
+        document.getElementById("teamBName").value || "Team B";
 
     document.getElementById("teamA").style.backgroundColor =
         document.getElementById("teamAColor").value;
 
     document.getElementById("teamB").style.backgroundColor =
         document.getElementById("teamBColor").value;
+}
 
-    document.getElementById("setup").style.display = "none";
+function updateDisplay(){
 
-    document.getElementById("board").style.display = "flex";
+    document.getElementById("scoreA").textContent = scoreA;
+    document.getElementById("scoreB").textContent = scoreB;
+}
 
-    document.getElementById("resetBtn").style.display = "block";
+applySettings();
+updateDisplay();
 
-    updateDisplay();
+document.getElementById("settingsBtn").onclick = function(){
+
+    let setup = document.getElementById("setup");
+
+    if(setup.style.display === "block"){
+        setup.style.display = "none";
+    } else {
+        setup.style.display = "block";
+    }
 };
 
-document.getElementById("teamA").onclick = function(e) {
+document.getElementById("applyBtn").onclick = function(){
 
-    if (e.target.id !== "minusA") {
+    applySettings();
+
+    document.getElementById("setup").style.display = "none";
+};
+
+document.getElementById("teamA").onclick = function(e){
+
+    if(e.target.id !== "minusA"){
 
         scoreA++;
         updateDisplay();
     }
 };
 
-document.getElementById("teamB").onclick = function(e) {
+document.getElementById("teamB").onclick = function(e){
 
-    if (e.target.id !== "minusB") {
+    if(e.target.id !== "minusB"){
 
         scoreB++;
         updateDisplay();
     }
 };
 
-document.getElementById("minusA").onclick = function(e) {
+document.getElementById("minusA").onclick = function(e){
 
     e.stopPropagation();
 
-    if (scoreA > 0) {
-
+    if(scoreA > 0){
         scoreA--;
         updateDisplay();
     }
 };
 
-document.getElementById("minusB").onclick = function(e) {
+document.getElementById("minusB").onclick = function(e){
 
     e.stopPropagation();
 
-    if (scoreB > 0) {
-
+    if(scoreB > 0){
         scoreB--;
         updateDisplay();
     }
 };
 
-document.getElementById("resetBtn").onclick = function() {
+document.getElementById("resetBtn").onclick = function(){
 
-    if (confirm("Reset scores?")) {
+    if(confirm("Reset scores?")){
 
         scoreA = 0;
         scoreB = 0;
