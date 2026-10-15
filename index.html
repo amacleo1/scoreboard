@@ -24,8 +24,9 @@ body{
 }
 
 #setup{
-    padding:10px;
     display:none;
+    padding:10px;
+    background:#1f2937;
 }
 
 .row{
@@ -52,7 +53,6 @@ button{
     border-radius:10px;
 }
 
-#startBtn,
 #applyBtn{
     width:100%;
     padding:12px;
@@ -65,16 +65,13 @@ button{
     position:fixed;
     bottom:10px;
     left:10px;
-
-    width:40px;
-    height:40px;
-
+    width:42px;
+    height:42px;
+    border-radius:50%;
     background:#2563eb;
     color:white;
-
     font-size:18px;
-
-    z-index:1000;
+    z-index:9999;
 }
 
 #resetBtn{
@@ -84,7 +81,7 @@ button{
     transform:translateX(-50%);
 
     width:120px;
-    height:40px;
+    height:42px;
 
     background:#dc2626;
     color:white;
@@ -92,7 +89,7 @@ button{
     font-size:16px;
     font-weight:bold;
 
-    z-index:1000;
+    z-index:9999;
 }
 
 #board{
@@ -128,8 +125,8 @@ button{
 }
 
 .minus{
-    width:50px;
-    height:32px;
+    width:55px;
+    height:34px;
 
     padding:0;
 
@@ -142,16 +139,12 @@ button{
 
 @media (orientation:landscape){
 
-    #board{
-        height:calc(100vh - 55px);
+    .score{
+        font-size:min(45vh,420px);
     }
 
     .name{
         font-size:20px;
-    }
-
-    .score{
-        font-size:min(45vh,420px);
     }
 }
 
@@ -159,9 +152,6 @@ button{
 </head>
 
 <body>
-
-<button id="settingsBtn">⚙️</button>
-<button id="resetBtn">Reset</button>
 
 <div id="setup">
 
@@ -178,6 +168,10 @@ button{
     <button id="applyBtn">Apply Changes</button>
 
 </div>
+
+<button id="settingsBtn">⚙️</button>
+
+<button id="resetBtn">Reset</button>
 
 <div id="board">
 
@@ -208,7 +202,12 @@ button{
 let scoreA = 0;
 let scoreB = 0;
 
-function applySettings(){
+function updateDisplay() {
+    document.getElementById("scoreA").textContent = scoreA;
+    document.getElementById("scoreB").textContent = scoreB;
+}
+
+function applySettings() {
 
     document.getElementById("nameA").textContent =
         document.getElementById("teamAName").value || "Team A";
@@ -223,18 +222,12 @@ function applySettings(){
         document.getElementById("teamBColor").value;
 }
 
-function updateDisplay(){
-
-    document.getElementById("scoreA").textContent = scoreA;
-    document.getElementById("scoreB").textContent = scoreB;
-}
-
 applySettings();
 updateDisplay();
 
-document.getElementById("settingsBtn").onclick = function(){
+document.getElementById("settingsBtn").onclick = function() {
 
-    let setup = document.getElementById("setup");
+    const setup = document.getElementById("setup");
 
     if(setup.style.display === "block"){
         setup.style.display = "none";
@@ -243,54 +236,52 @@ document.getElementById("settingsBtn").onclick = function(){
     }
 };
 
-document.getElementById("applyBtn").onclick = function(){
+document.getElementById("applyBtn").onclick = function() {
 
     applySettings();
 
     document.getElementById("setup").style.display = "none";
 };
 
-document.getElementById("teamA").onclick = function(e){
+document.getElementById("teamA").onclick = function(e) {
 
-    if(e.target.id !== "minusA"){
-
+    if(e.target.id !== "minusA") {
         scoreA++;
         updateDisplay();
     }
 };
 
-document.getElementById("teamB").onclick = function(e){
+document.getElementById("teamB").onclick = function(e) {
 
-    if(e.target.id !== "minusB"){
-
+    if(e.target.id !== "minusB") {
         scoreB++;
         updateDisplay();
     }
 };
 
-document.getElementById("minusA").onclick = function(e){
+document.getElementById("minusA").onclick = function(e) {
 
     e.stopPropagation();
 
-    if(scoreA > 0){
+    if(scoreA > 0) {
         scoreA--;
         updateDisplay();
     }
 };
 
-document.getElementById("minusB").onclick = function(e){
+document.getElementById("minusB").onclick = function(e) {
 
     e.stopPropagation();
 
-    if(scoreB > 0){
+    if(scoreB > 0) {
         scoreB--;
         updateDisplay();
     }
 };
 
-document.getElementById("resetBtn").onclick = function(){
+document.getElementById("resetBtn").onclick = function() {
 
-    if(confirm("Reset scores?")){
+    if(confirm("Reset scores?")) {
 
         scoreA = 0;
         scoreB = 0;
