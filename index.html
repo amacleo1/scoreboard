@@ -1,38 +1,203 @@
-.settings-btn{
-    position:fixed;
-    bottom:10px;
-    right:10px;
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    width:36px;
-    height:36px;
+<title>Volleyball Scorekeeper</title>
 
-    border:none;
-    border-radius:50%;
+<style>
 
-    background:#2563eb;
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#111827;
     color:white;
-
-    font-size:16px;
-
-    z-index:1000;
-    display:none;
 }
 
-.reset-btn{
+#setup{
+    padding:10px;
+}
+
+.row{
+    display:flex;
+    gap:10px;
+    margin-bottom:10px;
+}
+
+input[type=text]{
+    flex:1;
+    padding:10px;
+    font-size:18px;
+}
+
+input[type=color]{
+    width:60px;
+}
+
+#startBtn{
+    width:100%;
+    padding:12px;
+    font-size:18px;
+    background:#16a34a;
+    color:white;
+    border:none;
+}
+
+#board{
+    display:none;
+    height:100vh;
+}
+
+.team{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px;
+}
+
+.name{
+    font-size:24px;
+    font-weight:bold;
+}
+
+.score{
+    font-size:180px;
+    font-weight:bold;
+}
+
+.minus{
+    width:120px;
+    padding:10px;
+    font-size:24px;
+}
+
+#resetBtn{
     position:fixed;
     bottom:10px;
     left:10px;
-
-    width:36px;
-    height:36px;
-
-    border:none;
-    border-radius:50%;
-
-    background:#dc2626;
-    color:white;
-
-    font-size:16px;
-
-    z-index:1000;
+    width:40px;
+    height:40px;
+    display:none;
 }
+
+</style>
+</head>
+
+<body>
+
+<div id="setup">
+
+    <div class="row">
+        <input id="teamAName" type="text" value="Team A">
+        <input id="teamAColor" type="color" value="#e74c3c">
+    </div>
+
+    <div class="row">
+        <input id="teamBName" type="text" value="Team B">
+        <input id="teamBColor" type="color" value="#3498db">
+    </div>
+
+    <button id="startBtn">Start Match</button>
+
+</div>
+
+<button id="resetBtn">↺</button>
+
+<div id="board">
+
+    <div class="team" id="teamA">
+
+        <div class="name" id="nameA">Team A</div>
+
+        <div class="score" id="scoreA">0</div>
+
+        <button class="minus" id="minusA">-1</button>
+
+    </div>
+
+    <div class="team" id="teamB">
+
+        <div class="name" id="nameB">Team B</div>
+
+        <div class="score" id="scoreB">0</div>
+
+        <button class="minus" id="minusB">-1</button>
+
+    </div>
+
+</div>
+
+<script>
+
+let scoreA = 0;
+let scoreB = 0;
+
+function refreshScores(){
+    document.getElementById("scoreA").textContent = scoreA;
+    document.getElementById("scoreB").textContent = scoreB;
+}
+
+document.getElementById("startBtn").onclick = function(){
+
+    document.getElementById("nameA").textContent =
+        document.getElementById("teamAName").value;
+
+    document.getElementById("nameB").textContent =
+        document.getElementById("teamBName").value;
+
+    document.getElementById("teamA").style.backgroundColor =
+        document.getElementById("teamAColor").value;
+
+    document.getElementById("teamB").style.backgroundColor =
+        document.getElementById("teamBColor").value;
+
+    document.getElementById("setup").style.display = "none";
+
+    document.getElementById("board").style.display = "flex";
+
+    document.getElementById("resetBtn").style.display = "block";
+};
+
+document.getElementById("teamA").onclick = function(e){
+    if(e.target.id !== "minusA"){
+        scoreA++;
+        refreshScores();
+    }
+};
+
+document.getElementById("teamB").onclick = function(e){
+    if(e.target.id !== "minusB"){
+        scoreB++;
+        refreshScores();
+    }
+};
+
+document.getElementById("minusA").onclick = function(e){
+    e.stopPropagation();
+    if(scoreA > 0){
+        scoreA--;
+        refreshScores();
+    }
+};
+
+document.getElementById("minusB").onclick = function(e){
+    e.stopPropagation();
+    if(scoreB > 0){
+        scoreB--;
+        refreshScores();
+    }
+};
+
+document.getElementById("resetBtn").onclick = function(){
+    scoreA = 0;
+    scoreB = 0;
+    refreshScores();
+};
+
+</script>
+
+</body>
+</html>
