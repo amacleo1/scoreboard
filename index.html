@@ -1,178 +1,267 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0,
-      maximum-scale=1.0,
-      user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <title>Volleyball Scorekeeper</title>
 
-<meta name="theme-color" content="#111827">
-
 <style>
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    -webkit-tap-highlight-color:transparent;
-}
-
-html,body{
-    height:100%;
-    overflow:hidden;
-}
-
 body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    margin:0;
+    font-family:-apple-system,sans-serif;
     background:#111827;
     color:white;
-    padding:8px;
 }
 
-#setupArea{
+#setup{
+    padding:10px;
+}
+
+.row{
+    display:flex;
+    gap:10px;
     margin-bottom:10px;
 }
 
-.setup{
-    display:grid;
-    grid-template-columns:1fr 65px;
-    gap:8px;
-    margin-bottom:8px;
-}
-
-input[type="text"]{
-    padding:12px;
-    border:none;
-    border-radius:12px;
+input[type=text]{
+    flex:1;
+    padding:10px;
     font-size:18px;
-    width:100%;
-}
-
-input[type="color"]{
-    width:100%;
-    height:50px;
+    border-radius:10px;
     border:none;
-    border-radius:12px;
 }
 
-.start-btn{
+input[type=color]{
+    width:60px;
+    border:none;
+}
+
+button{
+    border:none;
+    border-radius:10px;
+}
+
+#startBtn{
     width:100%;
     padding:12px;
-    border:none;
-    border-radius:12px;
+    font-size:18px;
     background:#16a34a;
     color:white;
-    font-size:18px;
-    font-weight:600;
 }
 
-.settings-btn{
+#settingsBtn{
     position:fixed;
     top:10px;
     right:10px;
-    width:42px;
-    height:42px;
-    border:none;
-    border-radius:50%;
+    width:40px;
+    height:40px;
+    display:none;
+    font-size:20px;
     background:#2563eb;
     color:white;
-    font-size:20px;
-    z-index:1000;
-    display:none;
 }
 
-.reset-btn{
+#resetBtn{
     position:fixed;
     top:10px;
     left:10px;
-    width:42px;
-    height:42px;
-    border:none;
-    border-radius:50%;
+    width:40px;
+    height:40px;
+    display:none;
+    font-size:20px;
     background:#dc2626;
     color:white;
-    font-size:20px;
-    z-index:1000;
 }
 
-.scoreboard{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    height:calc(100vh - 16px);
+#board{
+    display:none;
+    height:100vh;
+    gap:6px;
 }
 
 .team{
-    border-radius:22px;
-    padding:12px;
+    flex:1;
     display:flex;
     flex-direction:column;
-    justify-content:space-between;
     align-items:center;
-    text-align:center;
-    user-select:none;
+    justify-content:space-between;
+    padding:10px;
 }
 
-.team-name{
-    height:42px;
-    width:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:clamp(20px,3vw,32px);
-    font-weight:700;
-
+.name{
+    font-size:24px;
+    font-weight:bold;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
+    width:100%;
+    text-align:center;
 }
 
 .score{
-    font-size:min(35vw,280px);
+    font-size:40vw;
     font-weight:900;
     line-height:1;
 }
 
-.minus-btn{
-    width:90%;
-    border:none;
-    border-radius:18px;
-    padding:18px;
-    font-size:34px;
-    font-weight:bold;
-    background:rgba(255,255,255,.25);
+.minus{
+    width:80%;
+    padding:12px;
+    font-size:28px;
+    background:rgba(255,255,255,0.25);
     color:white;
 }
 
 @media (orientation:landscape){
-
-    .scoreboard{
-        height:calc(100vh - 16px);
-    }
-
     .score{
-        font-size:min(40vw,420px);
-    }
-
-    .minus-btn{
-        width:80%;
-        font-size:28px;
-        padding:14px;
+        font-size:30vw;
     }
 }
-
 </style>
 </head>
 
 <body>
 
-<div id="setupArea">
+<div id="setup">
 
-    <div class="setup">
-        <input id="nameA" type="text" value="Team A">
-        <input id="colorA" type="color
+    <div class="row">
+        <input id="teamAName" type="text" value="Team A">
+        <input id="teamAColor" type="color" value="#ff4d30">
+    </div>
+
+    <div class="row">
+        <input id="teamBName" type="text" value="Team B">
+        <input id="teamBColor" type="color" value="#4285f4">
+    </div>
+
+    <button id="startBtn">Start Match</button>
+
+</div>
+
+<button id="settingsBtn">⚙️</button>
+<button id="resetBtn">↺</button>
+
+<div id="board">
+
+    <div class="team" id="teamA">
+
+        <div class="name" id="nameA">Team A</div>
+
+        <div class="score" id="scoreA">0</div>
+
+        <button class="minus" id="minusA">-1</button>
+
+    </div>
+
+    <div class="team" id="teamB">
+
+        <div class="name" id="nameB">Team B</div>
+
+        <div class="score" id="scoreB">0</div>
+
+        <button class="minus" id="minusB">-1</button>
+
+    </div>
+
+</div>
+
+<script>
+
+let scoreA = 0;
+let scoreB = 0;
+
+function draw(){
+
+    document.getElementById("scoreA").innerText = scoreA;
+    document.getElementById("scoreB").innerText = scoreB;
+
+    document.getElementById("nameA").innerText =
+        document.getElementById("teamAName").value;
+
+    document.getElementById("nameB").innerText =
+        document.getElementById("teamBName").value;
+
+    document.getElementById("teamA").style.background =
+        document.getElementById("teamAColor").value;
+
+    document.getElementById("teamB").style.background =
+        document.getElementById("teamBColor").value;
+}
+
+document.getElementById("startBtn").onclick = function(){
+
+    draw();
+
+    document.getElementById("setup").style.display="none";
+
+    document.getElementById("board").style.display="flex";
+
+    document.getElementById("settingsBtn").style.display="block";
+
+    document.getElementById("resetBtn").style.display="block";
+};
+
+document.getElementById("settingsBtn").onclick = function(){
+
+    let setup = document.getElementById("setup");
+
+    if(setup.style.display==="none"){
+        setup.style.display="block";
+    } else {
+        setup.style.display="none";
+    }
+};
+
+document.getElementById("teamA").onclick = function(e){
+
+    if(e.target.id==="minusA") return;
+
+    scoreA++;
+    draw();
+};
+
+document.getElementById("teamB").onclick = function(e){
+
+    if(e.target.id==="minusB") return;
+
+    scoreB++;
+    draw();
+};
+
+document.getElementById("minusA").onclick = function(e){
+
+    e.stopPropagation();
+
+    if(scoreA>0) scoreA--;
+
+    draw();
+};
+
+document.getElementById("minusB").onclick = function(e){
+
+    e.stopPropagation();
+
+    if(scoreB>0) scoreB--;
+
+    draw();
+};
+
+document.getElementById("resetBtn").onclick = function(){
+
+    if(confirm("Reset scores?")){
+
+        scoreA=0;
+        scoreB=0;
+
+        draw();
+    }
+};
+
+draw();
+
+</script>
+
+</body>
+</html>
+
