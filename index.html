@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>Volleyball Scorekeeper</title>
 
 <style>
-
 body{
     margin:0;
-    font-family:Arial,sans-serif;
+    font-family:-apple-system, Arial, sans-serif;
     background:#111827;
     color:white;
 }
@@ -27,12 +26,20 @@ body{
 
 input[type=text]{
     flex:1;
-    padding:10px;
+    padding:12px;
     font-size:18px;
+    border:none;
+    border-radius:10px;
 }
 
 input[type=color]{
     width:60px;
+    border:none;
+}
+
+button{
+    border:none;
+    border-radius:10px;
 }
 
 #startBtn{
@@ -41,7 +48,19 @@ input[type=color]{
     font-size:18px;
     background:#16a34a;
     color:white;
-    border:none;
+}
+
+#resetBtn{
+    position:fixed;
+    bottom:10px;
+    left:10px;
+    width:40px;
+    height:40px;
+    font-size:18px;
+    background:#dc2626;
+    color:white;
+    display:none;
+    z-index:1000;
 }
 
 #board{
@@ -59,30 +78,38 @@ input[type=color]{
 }
 
 .name{
+    width:100%;
+    text-align:center;
     font-size:24px;
     font-weight:bold;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
 .score{
-    font-size:180px;
-    font-weight:bold;
+    font-size:min(35vw,220px);
+    font-weight:900;
+    line-height:1;
 }
 
 .minus{
     width:120px;
     padding:10px;
     font-size:24px;
+    background:rgba(255,255,255,0.25);
+    color:white;
 }
 
-#resetBtn{
-    position:fixed;
-    bottom:10px;
-    left:10px;
-    width:40px;
-    height:40px;
-    display:none;
-}
+@media (orientation:landscape){
+    .score{
+        font-size:min(30vw,260px);
+    }
 
+    .name{
+        font-size:20px;
+    }
+}
 </style>
 </head>
 
@@ -135,12 +162,12 @@ input[type=color]{
 let scoreA = 0;
 let scoreB = 0;
 
-function refreshScores(){
+function updateDisplay() {
     document.getElementById("scoreA").textContent = scoreA;
     document.getElementById("scoreB").textContent = scoreB;
 }
 
-document.getElementById("startBtn").onclick = function(){
+document.getElementById("startBtn").onclick = function() {
 
     document.getElementById("nameA").textContent =
         document.getElementById("teamAName").value;
@@ -155,46 +182,46 @@ document.getElementById("startBtn").onclick = function(){
         document.getElementById("teamBColor").value;
 
     document.getElementById("setup").style.display = "none";
-
     document.getElementById("board").style.display = "flex";
-
     document.getElementById("resetBtn").style.display = "block";
+
+    updateDisplay();
 };
 
-document.getElementById("teamA").onclick = function(e){
-    if(e.target.id !== "minusA"){
+document.getElementById("teamA").onclick = function(e) {
+    if (e.target.id !== "minusA") {
         scoreA++;
-        refreshScores();
+        updateDisplay();
     }
 };
 
-document.getElementById("teamB").onclick = function(e){
-    if(e.target.id !== "minusB"){
+document.getElementById("teamB").onclick = function(e) {
+    if (e.target.id !== "minusB") {
         scoreB++;
-        refreshScores();
+        updateDisplay();
     }
 };
 
-document.getElementById("minusA").onclick = function(e){
+document.getElementById("minusA").onclick = function(e) {
     e.stopPropagation();
-    if(scoreA > 0){
+    if (scoreA > 0) {
         scoreA--;
-        refreshScores();
+        updateDisplay();
     }
 };
 
-document.getElementById("minusB").onclick = function(e){
+document.getElementById("minusB").onclick = function(e) {
     e.stopPropagation();
-    if(scoreB > 0){
+    if (scoreB > 0) {
         scoreB--;
-        refreshScores();
+        updateDisplay();
     }
 };
 
-document.getElementById("resetBtn").onclick = function(){
+document.getElementById("resetBtn").onclick = function() {
     scoreA = 0;
     scoreB = 0;
-    refreshScores();
+    updateDisplay();
 };
 
 </script>
