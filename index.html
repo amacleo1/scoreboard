@@ -131,40 +131,56 @@ button{
 }
 
 #settingsBtn{
-    width:32px;
-    height:32px;
+    width:24px;
+    height:24px;
 
     border-radius:50%;
 
     background:#2563eb;
     color:white;
 
-    font-size:14px;
+    font-size:10px;
 }
 
 #resetBtn{
-    width:80px;
-    height:32px;
+    width:60px;
+    height:24px;
 
     background:#dc2626;
     color:white;
 
-    font-size:12px;
+    font-size:10px;
     font-weight:bold;
 }
 
 @media (orientation:landscape){
 
     #board{
-        height:calc(100vh - 50px);
+        height:calc(100vh - 35px);
     }
 
     .score{
-        font-size:min(45vh,420px);
+        font-size:min(50vh,500px);
     }
 
     .name{
-        font-size:18px;
+        font-size:16px;
+    }
+
+    #settingsBtn{
+        width:22px;
+        height:22px;
+        font-size:9px;
+    }
+
+    #resetBtn{
+        width:55px;
+        height:22px;
+        font-size:9px;
+    }
+
+    #controlBar{
+        height:30px;
     }
 }
 
