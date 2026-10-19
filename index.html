@@ -1,2 +1,343 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><title>Volleyball Scorekeeper v2.2</title><style>body{margin:0;font-family:-apple-system,Arial,sans-serif;background:#111827;color:#fff;overflow:hidden}#board{display:flex;height:calc(100vh - 50px);padding-bottom:0}.team{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px}.name{width:100%;text-align:center;font-size:22px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:10px}.score{flex:1;display:flex;align-items:center;justify-content:center;font-size:min(42vw,280px);font-weight:900;line-height:1}.minus{width:50px;height:32px;border:none;border-radius:8px;background:rgba(255,255,255,.18);color:white;font-size:16px;font-weight:bold;margin-bottom:18px}#controlBar{position:fixed;bottom:0;left:0;right:0;height:50px;display:flex;align-items:center;gap:8px;padding-left:8px;background:#111827;z-index:2000}#settingsBtn{width:24px;height:24px;border:none;border-radius:50%;background:#2563eb;color:#fff;font-size:10px}#resetBtn{width:60px;height:24px;border:none;border-radius:12px;background:#dc2626;color:#fff;font-size:10px;font-weight:bold}#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:3000}#settingsPanel{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(85vw,320px);background:#1f2937;padding:10px;border-radius:16px;z-index:3001;box-shadow:0 0 30px rgba(0,0,0,.6)}.row{display:flex;gap:10px;margin-bottom:10px}input[type=text]{flex:1;border:none;border-radius:8px;padding:10px;font-size:16px}input[type=color]{width:60px}.panelButton{width:100%;padding:8px;margin-top:6px;border:none;border-radius:8px;color:#fff;font-size:13px}#flipBtn{background:#f59e0b}#applyBtn{background:#16a34a}@media (orientation:landscape){#board{height:calc(100vh - 35px)}.score{font-size:min(52vh,520px)}.name{font-size:16px}.minus{width:42px;height:24px;font-size:12px;margin-bottom:8px}#controlBar{height:35px}#settingsBtn{width:22px;height:22px;font-size:9px}#resetBtn{width:55px;height:22px;font-size:9px}}</style></head><body><div id="overlay"></div><div id="settingsPanel"><div class="row"><input id="teamAName" value="Team A"><input id="teamAColor" type="color" value="#e74c3c"></div><div class="row"><input id="teamBName" value="Team B"><input id="teamBColor" type="color" value="#3498db"></div><button id="flipBtn" class="panelButton">⇄ Flip Sides</button><button id="applyBtn" class="panelButton">Apply Changes</button></div><div id="board"><div class="team" id="teamA"><div class="name" id="nameA">Team A</div><div class="score" id="scoreA">0</div><button class="minus" id="minusA">-1</button></div><div class="team" id="teamB"><div class="name" id="nameB">Team B</div><div class="score" id="scoreB">0</div><button class="minus" id="minusB">-1</button></div></div><div id="controlBar"><button id="settingsBtn">⚙️</button><button id="resetBtn">Reset</button></div><script>let scoreA=0,scoreB=0;const $=id=>document.getElementById(id);function update(){$('scoreA').textContent=scoreA;$('scoreB').textContent=scoreB}function apply(){ $('nameA').textContent=$('teamAName').value||'Team A';$('nameB').textContent=$('teamBName').value||'Team B';$('teamA').style.backgroundColor=$('teamAColor').value;$('teamB').style.backgroundColor=$('teamBColor').value;}function toggle(){const p=$('settingsPanel'),o=$('overlay');const show=p.style.display!=='block';p.style.display=show?'block':'none';o.style.display=show?'block':'none';}apply();update();$('settingsBtn').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();toggle();});$('overlay').addEventListener('click',toggle);$('applyBtn').addEventListener('click',()=>{apply();toggle();});$('flipBtn').addEventListener('click',()=>{let n=$('teamAName').value;$('teamAName').value=$('teamBName').value;$('teamBName').value=n;let c=$('teamAColor').value;$('teamAColor').value=$('teamBColor').value;$('teamBColor').value=c;let s=scoreA;scoreA=scoreB;scoreB=s;apply();update();});$('teamA').addEventListener('click',e=>{if(e.target.closest('#controlBar')||e.target.id==='minusA')return;scoreA++;update();});$('teamB').addEventListener('click',e=>{if(e.target.id==='minusB')return;scoreB++;update();});$('minusA').addEventListener('click',e=>{e.stopPropagation();if(scoreA>0){scoreA--;update();}});$('minusB').addEventListener('click',e=>{e.stopPropagation();if(scoreB>0){scoreB--;update();}});$('resetBtn').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(confirm('Reset scores?')){scoreA=0;scoreB=0;update();}});</script></body></html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+      initial-scale=1,
+      maximum-scale=1,
+      user-scalable=no">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<title>Scorekeeper App by Ang</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:-apple-system, Arial, sans-serif;
+    background:#111827;
+    color:white;
+}
+
+#setup{
+    display:none;
+    padding:10px;
+    background:#1f2937;
+}
+
+.row{
+    display:flex;
+    gap:10px;
+    margin-bottom:10px;
+}
+
+input[type=text]{
+    flex:1;
+    padding:12px;
+    font-size:18px;
+    border:none;
+    border-radius:10px;
+}
+
+input[type=color]{
+    width:60px;
+    border:none;
+}
+
+button{
+    border:none;
+    border-radius:10px;
+}
+
+#applyBtn,
+#flipBtn{
+    width:100%;
+    padding:12px;
+    font-size:16px;
+    margin-top:8px;
+    color:white;
+}
+
+#applyBtn{
+    background:#16a34a;
+}
+
+#flipBtn{
+    background:#f59e0b;
+}
+
+#board{
+    display:flex;
+    height:calc(100vh - 55px);
+}
+
+.team{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px;
+}
+
+.name{
+    width:100%;
+    text-align:center;
+
+    font-size:22px;
+    font-weight:bold;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.score{
+    font-size:min(42vw,280px);
+    font-weight:900;
+    line-height:1;
+}
+
+.minus{
+    width:50px;
+    height:32px;
+
+    font-size:16px;
+    font-weight:bold;
+
+    background:rgba(255,255,255,.18);
+    color:white;
+}
+
+#controlBar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+
+    height:55px;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    padding-left:10px;
+
+    background:#111827;
+}
+
+#settingsBtn{
+    width:32px;
+    height:32px;
+
+    border-radius:50%;
+
+    background:#2563eb;
+    color:white;
+
+    font-size:14px;
+}
+
+#resetBtn{
+    width:80px;
+    height:32px;
+
+    background:#dc2626;
+    color:white;
+
+    font-size:12px;
+    font-weight:bold;
+}
+
+@media (orientation:landscape){
+
+    #board{
+        height:calc(100vh - 50px);
+    }
+
+    .score{
+        font-size:min(45vh,420px);
+    }
+
+    .name{
+        font-size:18px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="setup">
+
+    <div class="row">
+        <input id="teamAName" type="text" value="Team A">
+        <input id="teamAColor" type="color" value="#e74c3c">
+    </div>
+
+    <div class="row">
+        <input id="teamBName" type="text" value="Team B">
+        <input id="teamBColor" type="color" value="#3498db">
+    </div>
+
+    <button id="flipBtn">⇄ Flip Sides</button>
+
+    <button id="applyBtn">Apply Changes</button>
+
+</div>
+
+<div id="board">
+
+    <div class="team" id="teamA">
+
+        <div class="name" id="nameA">Team A</div>
+
+        <div class="score" id="scoreA">0</div>
+
+        <button class="minus" id="minusA">-1</button>
+
+    </div>
+
+    <div class="team" id="teamB">
+
+        <div class="name" id="nameB">Team B</div>
+
+        <div class="score" id="scoreB">0</div>
+
+        <button class="minus" id="minusB">-1</button>
+
+    </div>
+
+</div>
+
+<div id="controlBar">
+
+    <button id="settingsBtn">⚙️</button>
+
+    <button id="resetBtn">Reset</button>
+
+</div>
+
+<script>
+
+let scoreA = 0;
+let scoreB = 0;
+
+function updateDisplay(){
+
+    document.getElementById("scoreA").textContent = scoreA;
+    document.getElementById("scoreB").textContent = scoreB;
+}
+
+function applySettings(){
+
+    document.getElementById("nameA").textContent =
+        document.getElementById("teamAName").value || "Team A";
+
+    document.getElementById("nameB").textContent =
+        document.getElementById("teamBName").value || "Team B";
+
+    document.getElementById("teamA").style.backgroundColor =
+        document.getElementById("teamAColor").value;
+
+    document.getElementById("teamB").style.backgroundColor =
+        document.getElementById("teamBColor").value;
+}
+
+applySettings();
+updateDisplay();
+
+document.getElementById("settingsBtn").addEventListener("click", function(e){
+
+    e.stopPropagation();
+
+    const setup = document.getElementById("setup");
+
+    setup.style.display =
+        setup.style.display === "block" ? "none" : "block";
+});
+
+document.getElementById("applyBtn").addEventListener("click", function(){
+
+    applySettings();
+    document.getElementById("setup").style.display = "none";
+});
+
+document.getElementById("flipBtn").addEventListener("click", function(){
+
+    let tempName = document.getElementById("teamAName").value;
+    document.getElementById("teamAName").value =
+        document.getElementById("teamBName").value;
+    document.getElementById("teamBName").value = tempName;
+
+    let tempColor = document.getElementById("teamAColor").value;
+    document.getElementById("teamAColor").value =
+        document.getElementById("teamBColor").value;
+    document.getElementById("teamBColor").value = tempColor;
+
+    let tempScore = scoreA;
+    scoreA = scoreB;
+    scoreB = tempScore;
+
+    applySettings();
+    updateDisplay();
+});
+
+document.getElementById("teamA").addEventListener("click", function(e){
+
+    if(e.target.id === "minusA") return;
+
+    scoreA++;
+    updateDisplay();
+});
+
+document.getElementById("teamB").addEventListener("click", function(e){
+
+    if(e.target.id === "minusB") return;
+
+    scoreB++;
+    updateDisplay();
+});
+
+document.getElementById("minusA").addEventListener("click", function(e){
+
+    e.stopPropagation();
+
+    if(scoreA > 0){
+        scoreA--;
+        updateDisplay();
+    }
+});
+
+document.getElementById("minusB").addEventListener("click", function(e){
+
+    e.stopPropagation();
+
+    if(scoreB > 0){
+        scoreB--;
+        updateDisplay();
+    }
+});
+
+document.getElementById("resetBtn").addEventListener("click", function(e){
+
+    e.stopPropagation();
+
+    if(confirm("Reset scores?")){
+
+        scoreA = 0;
+        scoreB = 0;
+
+        updateDisplay();
+    }
+});
+
+</script>
+
+</body>
+</html>
