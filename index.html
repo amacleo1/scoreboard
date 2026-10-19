@@ -45,6 +45,7 @@ input[type=text]{
 
 input[type=color]{
     width:60px;
+    border:none;
 }
 
 button{
@@ -52,17 +53,26 @@ button{
     border-radius:10px;
 }
 
-#applyBtn{
+#applyBtn,
+#flipBtn{
     width:100%;
     padding:12px;
-    font-size:18px;
-    background:#16a34a;
+    font-size:16px;
+    margin-top:8px;
     color:white;
+}
+
+#applyBtn{
+    background:#16a34a;
+}
+
+#flipBtn{
+    background:#f59e0b;
 }
 
 #board{
     display:flex;
-    height:calc(100vh - 90px);
+    height:calc(100vh - 55px);
 }
 
 .team{
@@ -77,6 +87,7 @@ button{
 .name{
     width:100%;
     text-align:center;
+
     font-size:22px;
     font-weight:bold;
 
@@ -94,9 +105,11 @@ button{
 .minus{
     width:50px;
     height:32px;
+
     font-size:16px;
     font-weight:bold;
-    background:rgba(255,255,255,.2);
+
+    background:rgba(255,255,255,.18);
     color:white;
 }
 
@@ -106,40 +119,45 @@ button{
     left:0;
     right:0;
 
-    height:60px;
+    height:55px;
 
     display:flex;
     align-items:center;
-    justify-content:center;
-    gap:15px;
+    gap:10px;
+
+    padding-left:10px;
 
     background:#111827;
 }
 
 #settingsBtn{
-    width:40px;
-    height:40px;
+    width:32px;
+    height:32px;
 
     border-radius:50%;
 
     background:#2563eb;
     color:white;
 
-    font-size:18px;
+    font-size:14px;
 }
 
 #resetBtn{
-    width:120px;
-    height:40px;
+    width:80px;
+    height:32px;
 
     background:#dc2626;
     color:white;
 
-    font-size:15px;
+    font-size:12px;
     font-weight:bold;
 }
 
 @media (orientation:landscape){
+
+    #board{
+        height:calc(100vh - 50px);
+    }
 
     .score{
         font-size:min(45vh,420px);
@@ -166,6 +184,8 @@ button{
         <input id="teamBName" type="text" value="Team B">
         <input id="teamBColor" type="color" value="#3498db">
     </div>
+
+    <button id="flipBtn">⇄ Flip Sides</button>
 
     <button id="applyBtn">Apply Changes</button>
 
@@ -209,6 +229,7 @@ let scoreA = 0;
 let scoreB = 0;
 
 function updateDisplay(){
+
     document.getElementById("scoreA").textContent = scoreA;
     document.getElementById("scoreB").textContent = scoreB;
 }
@@ -231,17 +252,14 @@ function applySettings(){
 applySettings();
 updateDisplay();
 
-document.getElementById("settingsBtn").addEventListener("click", function(event){
+document.getElementById("settingsBtn").addEventListener("click", function(e){
 
-    event.stopPropagation();
+    e.stopPropagation();
 
     const setup = document.getElementById("setup");
 
-    if(setup.style.display === "block"){
-        setup.style.display = "none";
-    } else {
-        setup.style.display = "block";
-    }
+    setup.style.display =
+        setup.style.display === "block" ? "none" : "block";
 });
 
 document.getElementById("applyBtn").addEventListener("click", function(){
@@ -250,25 +268,45 @@ document.getElementById("applyBtn").addEventListener("click", function(){
     document.getElementById("setup").style.display = "none";
 });
 
-document.getElementById("teamA").addEventListener("click", function(event){
+document.getElementById("flipBtn").addEventListener("click", function(){
 
-    if(event.target.id === "minusA") return;
+    let tempName = document.getElementById("teamAName").value;
+    document.getElementById("teamAName").value =
+        document.getElementById("teamBName").value;
+    document.getElementById("teamBName").value = tempName;
+
+    let tempColor = document.getElementById("teamAColor").value;
+    document.getElementById("teamAColor").value =
+        document.getElementById("teamBColor").value;
+    document.getElementById("teamBColor").value = tempColor;
+
+    let tempScore = scoreA;
+    scoreA = scoreB;
+    scoreB = tempScore;
+
+    applySettings();
+    updateDisplay();
+});
+
+document.getElementById("teamA").addEventListener("click", function(e){
+
+    if(e.target.id === "minusA") return;
 
     scoreA++;
     updateDisplay();
 });
 
-document.getElementById("teamB").addEventListener("click", function(event){
+document.getElementById("teamB").addEventListener("click", function(e){
 
-    if(event.target.id === "minusB") return;
+    if(e.target.id === "minusB") return;
 
     scoreB++;
     updateDisplay();
 });
 
-document.getElementById("minusA").addEventListener("click", function(event){
+document.getElementById("minusA").addEventListener("click", function(e){
 
-    event.stopPropagation();
+    e.stopPropagation();
 
     if(scoreA > 0){
         scoreA--;
@@ -276,9 +314,9 @@ document.getElementById("minusA").addEventListener("click", function(event){
     }
 });
 
-document.getElementById("minusB").addEventListener("click", function(event){
+document.getElementById("minusB").addEventListener("click", function(e){
 
-    event.stopPropagation();
+    e.stopPropagation();
 
     if(scoreB > 0){
         scoreB--;
@@ -286,9 +324,9 @@ document.getElementById("minusB").addEventListener("click", function(event){
     }
 });
 
-document.getElementById("resetBtn").addEventListener("click", function(event){
+document.getElementById("resetBtn").addEventListener("click", function(e){
 
-    event.stopPropagation();
+    e.stopPropagation();
 
     if(confirm("Reset scores?")){
 
